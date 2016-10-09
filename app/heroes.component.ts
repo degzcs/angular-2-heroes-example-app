@@ -8,14 +8,14 @@ import { HeroService } from './hero.service';
   moduleId: module.id,
   selector: 'my-heroes',
   templateUrl: 'heroes.component.html',
-  // styleUrls: ['heroes.component.css'],
+  styleUrls: ['heroes.component.css'],
 })
 
 export class HeroesComponent implements OnInit {
   //
   // Attributes
   //
-  // heroes = Hero[]; // NOTE: this variable is setting up in a promise in getHeroes method
+  heroes: Hero[] =[]; // NOTE: this variable is setting up in a promise in getHeroes method
   selectedHero: Hero;
 
   //
@@ -45,5 +45,23 @@ export class HeroesComponent implements OnInit {
 
   gotoDetail(): void{
     this.router.navigate(['/hero', this.selectedHero.id])
+  }
+
+  add(name: string): void {
+    name = name.trim();
+    if(!name){ return; }
+    this.heroService.create(name)
+      .then(hero => {
+        this.heroes.push(hero);
+        this.selectedHero = null;
+      });
+  }
+
+  delete(selectedHero: Hero): void {
+    this.heroService.delete(selectedHero.id)
+      .then(() => {
+        this.heroes = this.heroes.filter( hero => hero !== selectedHero);
+        if ( this.selectedHero === selectedHero) { this.selectedHero = null; }
+      });
   }
 }

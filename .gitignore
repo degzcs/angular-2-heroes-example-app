@@ -32,3 +32,4 @@ config/database.drone.yml
 node_modules/
 typings/
 app/*.js
+*.log
